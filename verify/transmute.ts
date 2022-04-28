@@ -12,7 +12,9 @@ export const transmute = async (vcFile) => {
     suite: [new Ed25519Signature2018()],
   });
 
+  console.log('Result for original document loader');
   console.log(result1);
+  console.log();
 
   const documentLoaderClass = new DocumentLoader('transmute');
   const result2 = await verifiable.credential.verify({
@@ -22,5 +24,6 @@ export const transmute = async (vcFile) => {
     suite: [new Ed25519Signature2018()],
   });
 
+  console.log('Result for new loader');
   console.log(result2);
 };

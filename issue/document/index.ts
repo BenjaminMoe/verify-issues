@@ -1,6 +1,7 @@
 import credentialContext from './contexts/w3org-2018-credentials-v1.json';
 import tracebilityContext from './contexts/w3cccg-tracebilitcyvocab-traceability-v1.json';
 import cregContext from './contexts/creg-context-v1.json';
+import cregContext1 from './contexts/creg.json';
 import bbsPlussSecurity from './contexts/bbs-pluss-security-v1.json';
 import securityV1 from './contexts/security-v1.json';
 import securityV2 from './contexts/security-v2.json';
@@ -12,7 +13,7 @@ const documentLoaders = jsonld.documentLoaders.node();
 export const documents = {
   'https://www.w3.org/2018/credentials/v1': credentialContext,
   'https://w3id.org/traceability/v1': tracebilityContext,
-  'https://credreg.net/ctdlasn/schema/context/json': cregContext,
+  'https://credreg.net/ctdlasn/schema/context/json': cregContext1,
   'https://w3id.org/security/bbs/v1': bbsPlussSecurity,
   'https://w3id.org/security/v1': securityV1,
   'https://w3id.org/security/v2': securityV2,
