@@ -1,25 +1,25 @@
-import { transmute } from "./transmute";
-import { digitalbazaar } from "./digitalbazaar";
+import { transmute } from './transmute';
+import { lowJsonLDSignaturesLevelVerify } from './low-level-verification';
 
-import { lowJsonLDSignaturesLevelVerify } from "./low-level-verification";
+import { simpleSigned, complexSigned } from './fixture';
 
-// import vc from './simpler-and-working-vc.json';
-import vc from './complex-non-working-vc.json';
+const main = async () => {
+  console.log('========================');
+  console.log('VERIFYING WITH SIMPLE');
+  console.log('========================');
+  await transmute(simpleSigned);
+  console.log('========================');
+  console.log('VERIFYING WITH COMPLEX');
+  console.log('========================');
+  await transmute(complexSigned);
+  console.log('========================');
+  console.log('VERIFYING WITH LOW LEVEL JSON LD SIGNATURES 1');
+  console.log('========================');
+  await lowJsonLDSignaturesLevelVerify(simpleSigned);
+  console.log('========================');
+  console.log('VERIFYING WITH LOW LEVEL JSON LD SIGNATURES 2');
+  console.log('========================');
+  await lowJsonLDSignaturesLevelVerify(complexSigned);
+};
 
-const main = async  () => {
-  console.log("========================")
-  console.log("VERIFYING WITH TRANSMUTE")
-  console.log("========================")
-  await transmute(vc);
-  console.log("========================")
-  console.log("VERIFYING WITH DIGITAL BAZAAR")
-  console.log("========================")
-  await digitalbazaar(vc);
-  console.log("========================")
-  console.log("VERIFYING WITH LOW LEVEL JSON LD SIGNATURES")
-  console.log("========================")
-  await lowJsonLDSignaturesLevelVerify(vc);
-  
-}
-
-main()
+main();

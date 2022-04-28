@@ -8,9 +8,6 @@ import { simple, complex, jwkKeyTest } from './fixture';
 const signtemplate = async (template): Promise<void> => {
   //@ts-ignore
   const key = await Ed25519KeyPair.from(jwkKeyTest);
-  //@ts-ignore
-  const vcData = structuredClone(template);
-
   const jwk = await key.export({
     privateKey: true,
     type: 'Ed25519VerificationKey2018',
@@ -20,7 +17,7 @@ const signtemplate = async (template): Promise<void> => {
   const suite = new Ed25519Signature2018({ key: verificationKey, date: '1991-08-25T12:33:56Z' });
 
   const output = await verifiable.credential.create({
-    credential: vcData,
+    credential: template,
     documentLoader: documentLoader,
     suite: suite,
   });
