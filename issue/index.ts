@@ -1,29 +1,42 @@
 import 'core-js/actual/structured-clone';
-import { transmute } from "./transmute-issue";
-import { digitalbazaar } from "./db-issue";
-
 import { Ed25519KeyPair } from '@transmute/ed25519-key-pair';
+import { verifiable } from '@transmute/vc.js';
+import { Ed25519Signature2018, Ed25519VerificationKey2018 } from '@transmute/ed25519-signature-2018';
+import { docLoader as documentLoader } from './document';
+import { simple, complex, jwkKeyTest } from './fixture';
 
-// import { signableSimpleTemplate as template, jwkKeyTest } from './fixture';
-import { signableComplexTemplate as template, jwkKeyTest } from './fixture';
-
-const main = async  () => {
-
+const signtemplate = async (template): Promise<void> => {
   //@ts-ignore
-  const rightKey = await Ed25519KeyPair.from(jwkKeyTest);
-  console.log("========================")
-  console.log("ISSUEING WITH TRANSMUTE")
-  console.log("========================")
+  const key = await Ed25519KeyPair.from(jwkKeyTest);
   //@ts-ignore
-  const templateForTransmute = structuredClone(template);
-  await transmute(templateForTransmute, rightKey);
-  console.log("========================")
-  console.log("ISSUEING WITH DIGITAL BAZAAR")
-  console.log("========================")
-  //@ts-ignore
-  const templateForDb = structuredClone(template);
-  await digitalbazaar(templateForDb, rightKey);
-  
-}
+  const vcData = structuredClone(template);
 
-main()
+  const jwk = await key.export({
+    privateKey: true,
+    type: 'Ed25519VerificationKey2018',
+  });
+
+  const verificationKey = await Ed25519VerificationKey2018.from(jwk);
+  const suite = new Ed25519Signature2018({ key: verificationKey, date: '1991-08-25T12:33:56Z' });
+
+  const output = await verifiable.credential.create({
+    credential: vcData,
+    documentLoader: documentLoader,
+    suite: suite,
+  });
+
+  const items = output.items;
+  const signedDocument = items[0];
+  console.log(JSON.stringify(signedDocument, null, 2));
+};
+
+(async () => {
+  console.log('========================');
+  console.log('ISSUING WITH SIMPLE TEMPLATE');
+  console.log('========================');
+  await signtemplate(simple);
+  console.log('========================');
+  console.log('ISSUING WITH COMPLEX TEMPLATE');
+  console.log('========================');
+  await signtemplate(complex);
+})();
